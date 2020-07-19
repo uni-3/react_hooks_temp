@@ -1,17 +1,18 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useContext } from "react";
 import { FormEvent } from "react";
 
-interface Props {
-  addTodo(text: string): void;
-}
+import { DispatchContext } from "../App";
+import { addTodo } from "../actions/action";
 
-export const TodoForm = (props: Props) => {
+export const TodoForm = () => {
   const [value, setValue] = useState("");
+
+  const { dispatch } = useContext(DispatchContext);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!value) return;
-    props.addTodo(value);
+    dispatch(addTodo(value));
     setValue("");
   };
 

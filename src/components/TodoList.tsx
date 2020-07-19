@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
+
 import { Todo, TodoProps } from "./Todo";
 
 interface Props {
-  todos: TodoProps[];
-  checkTodo(index: number): void;
+  todos?: TodoProps[];
 }
 
 export const TodoList = (props: Props) => {
-  // TODO context componentから流し込む
+  if (props.todos === undefined) {
+    return <></>;
+  }
+
   return (
     <>
       {props.todos.map((todo: TodoProps, index: number) => (
@@ -15,7 +18,6 @@ export const TodoList = (props: Props) => {
           key={index}
           todo={todo}
           index={index}
-          checkTodo={props.checkTodo}
         />
       ))}
     </>

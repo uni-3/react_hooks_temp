@@ -1,26 +1,13 @@
 import React from "react";
 
 import { TodoAction } from "../actions/action";
+import { TodoProps } from "../components/Todo";
 
-interface TodoProps {
-  text?: string;
-  done: boolean;
-}
-
-// TODO anyじゃなくて何を入れれば
 interface TodoState {
   todos?: TodoProps[] | [];
 }
 
 export const initialState: TodoState = { todos: [] };
-/*
-export const initialState: TodoState = {
-  todos: [{
-    text: "",
-    done: false,
-  }],
-};
-*/
 
 export const reducer: React.Reducer<TodoState, TodoAction> = (
   state: TodoState,
@@ -42,22 +29,21 @@ export const reducer: React.Reducer<TodoState, TodoAction> = (
         }],
       };
     case "REMOVE_TODO":
-      return { todos: stateTodos.filter((_, index) => index != action.index) };
-
-      /*
       const removedTodos = stateTodos.slice();
       removedTodos.splice(action.index, 1);
       return {
         todos: removedTodos,
       };
-      */
-
     case "CHECK_TODO":
       const checkedTodos = stateTodos.slice();
-      const done = checkedTodos[action.index].done;
-      checkedTodos[action.index].done = !done;
-      console.log("check", done);
-      console.log("check", checkedTodos);
+      // do not work...
+      //checkedTodos[action.index].done =  !checkedTodos[action.index].done;
+      checkedTodos[action.index] = {
+        "text": checkedTodos[action.index].text,
+        "done": !checkedTodos[action.index].done,
+      };
+      //console.log("action index", checkedTodos[action.index]);
+      //console.log("check", checkedTodos);
 
       return {
         todos: checkedTodos,

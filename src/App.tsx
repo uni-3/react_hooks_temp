@@ -1,14 +1,9 @@
-import React, { useState, useReducer, createContext } from "react";
+import React, { useReducer, createContext } from "react";
 
 import { reducer, initialState } from "./reducers/reducer";
 import {
-  initTodo,
-  addTodo,
-  removeTodo,
-  checkTodo,
   TodoAction,
 } from "./actions/action";
-import logo from "./assets/logo.svg";
 import "./App.css";
 
 import {
@@ -20,8 +15,6 @@ import {
 
 import { TodoList } from "./components/TodoList";
 import { TodoForm } from "./components/Form";
-
-import { TodoListAction } from "./components/TodoListAction";
 
 function Counter() {
   const state: AppState = useAppState();
@@ -42,36 +35,21 @@ function Counter() {
   );
 }
 
+// コンテキストを作成する
 type ContextType = {
   dispatch: React.Dispatch<TodoAction>;
 };
-
-// コンテキストを作成する
 export const DispatchContext = createContext({} as ContextType);
 
 export const TodoComp: React.FC = () => {
+  // TODO get todo from external storage
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log("init reducer", state);
-  // init user effect?
-  /*
-  const handleInit = (value: string) => {
-    dispatch(initTodo(state.todos));
-    console.log(value);
-  };
-  */
-  const handleAdd = (text: string) => {
-    console.log("handle add", text);
-    dispatch(addTodo(text));
-  };
 
   return (
     <>
-      <h4>
-        todo reducer
-      </h4>
       <DispatchContext.Provider value={{ dispatch: dispatch }}>
-        <TodoForm addTodo={handleAdd} />
-        <TodoListAction
+        <TodoForm />
+        <TodoList
           todos={state.todos}
         />
       </DispatchContext.Provider>
@@ -80,38 +58,13 @@ export const TodoComp: React.FC = () => {
 };
 
 function App() {
-  const [todos, setTodos] = useState([
-    { text: "Learn about React", done: false },
-    { text: "Meet friend for lunch", done: false },
-    { text: "Build really cool todo app", done: false },
-  ]);
-  const addTodo = (text: string) => {
-    const newTodos = [...todos, { text: text, done: false }];
-    setTodos(newTodos);
-  };
-
-  const checkTodo = (index: number) => {
-    const newTodos = [...todos];
-    newTodos[index].done = !newTodos[index].done;
-    setTodos(newTodos);
-  };
-
-  const removeTodo = (index: number) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
-  };
-
   return (
-    <AppStateProvider>
-      <Counter />
-      <TodoForm addTodo={addTodo} />
-      <TodoList
-        todos={todos}
-        checkTodo={checkTodo}
-      />
+    <>
+      <AppStateProvider>
+        <Counter />
+      </AppStateProvider>
       <TodoComp />
-    </AppStateProvider>
+    </>
   );
 }
 
